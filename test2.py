@@ -1,0 +1,2 @@
+#aaa
+print('hello')
