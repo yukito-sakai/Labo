@@ -25,7 +25,7 @@ while True:
     for k in range(2):                                                  
         for l in range(3):
             w[k][l] -=  delta * dw[k][l]
-            print('                      w[', k, ',', l,'] = ', w[k][l])
+            print('w[', k, ',', l,'] = ', w[k][l])
     if dw_sum < 0.00001:
         break
     print('E = ', E) 
