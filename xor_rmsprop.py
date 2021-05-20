@@ -14,6 +14,10 @@ dw1 = np.zeros(w1.shape)
 dw2 = np.zeros(w2.shape)
 
 rho = 0.3
+cache1 = 0
+cache2 = 0
+eps = 1e-4
+decay_rate = 0.9
 
 while True:
 
@@ -26,9 +30,14 @@ while True:
 
     dw2 = ((o2 - t.T) * (1 - o2) * o2).dot(o1.T)
     dw1 = ((((o2 - t.T) * (1 - o2) * o2).T).dot(w2).T * ((1 - o1) * o1)).dot(x)[1:]
-    w2 -= rho * dw2
+    
+    cache2 = decay_rate * cache2 + (1 - decay_rate) * dw2**2
+    w2 += - rho * dw2 / (np.sqrt(cache2) + eps)
+    #w2 -= rho * dw2
     #print(dw1)
-    w1 -= rho * dw1
+    cache1 = decay_rate * cache1 + (1 - decay_rate) * dw1**2
+    w1 += - rho * dw1 / (np.sqrt(cache1) + eps)
+    #w1 -= rho * dw1
     
     
     if np.sqrt(np.sum(dw2 * dw2) + np.sum(dw1 * dw1)) < 0.0001:

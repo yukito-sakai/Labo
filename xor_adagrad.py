@@ -6,6 +6,7 @@ def sig(s):
 x = np.array([[1, 0, 0],[1, 0, 1], [1, 1, 0], [1, 1, 1]])
 t = np.array([[0, 1],[1, 0], [1, 0], [0, 1]])
 
+np.random.seed(0)
 m = 5
 w1 = np.random.rand(m, 3)   
 w2 = np.random.rand(2, m+1)
