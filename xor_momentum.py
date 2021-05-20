@@ -13,6 +13,8 @@ dw1 = np.zeros(w1.shape)
 dw2 = np.zeros(w2.shape)
 
 rho = 0.3
+mu = 0.9
+v = 
 
 while True:
 
