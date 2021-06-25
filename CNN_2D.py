@@ -35,29 +35,45 @@ out = []
 
 pad = 1
 stride = 1
+bias = np.random.randint(-1, 1, (2))
 
 for k in range(0, len(x)+2*pad -len(w)+1, stride):
-    out_row = []
-    for i in range(0, len(x)+2*pad -len(w)+1, stride):
-        z = 0
-        for l in range(len(w)):
-            for j in range(len(w)):
-                if((0 <= k+l-pad) and (k+l-pad < len(x))):
-                    if((0 <= i+j-pad) and (i+j-pad < len(x))):
-                        z += x[k+l-pad][i+j-pad] * w[l][j]
-        out_row.append(z)
-    out.append(out_row)  
+        out_row = []
+        for i in range(0, len(x)+2*pad -len(w)+1, stride):
+            z = 0
+            for l in range(len(w)):
+                for j in range(len(w)):
+                    if((0 <= k+l-pad) and (k+l-pad < len(x))):
+                        if((0 <= i+j-pad) and (i+j-pad < len(x))):
+                            z += x[k+l-pad][i+j-pad] * w[l][j]
+            out_row.append(z)
+        out.append(out_row)  
+        
+out = np.array(out)
+
+'''
+for i in range(len(w)):
+    for j in range(len(w)):
+        z[,] += x[max(0,-pad+i):min(len(x),-1+i+len(x)), max(0, -pad+j):min(len(x),-1+j+len(x))] * w[i,j]
+  
     
 out = np.array(out)
+'''
+print('Conv')
+
 print(out)
 
 #ReLu
 def ReLu(x):
     return np.where(x > 0, x, 0)
 
+print('Lelu')
+print(ReLu(out))
 # MaxPooling
 out_2 = []
-out_2 = np.maximum(np.maximum(out[0::2,0::2], out[0::2,1::2]),np.maximum(out[1::2,0::2], out[1::2,1::2]))  # 0::2 0番目の値から２の倍数をとってくる
+#out_2 = np.maximum(np.maximum(out[0::2,0::2], out[0::2,1::2]),np.maximum(out[1::2,0::2], out[1::2,1::2]))
+out_2 = np.maximum.reduce([out[0::2,0::2], out[0::2,1::2],out[1::2,0::2], out[1::2,1::2]])  # 0::2 0番目の値から２の倍数をとってくる
+print('maxpooling')
 print(out_2)
 
 #Fully Connected
@@ -66,10 +82,12 @@ print(out_2)
 out_2 = np.ravel(out_2)       #１次元配列にする
 
 weight = np.random.rand(2,len(out_2))
-bias = np.random.rand(2)
+bias = np.random.randint(-1, 1, (2))
+
 
 fc = weight.dot(out_2) + bias
 fc = np.array(fc)
+print('fully connected')
 print(fc)
 
     
@@ -81,4 +99,5 @@ def softmax(x):
 
 
 y = softmax(fc)
+print('softmax')
 print(y)

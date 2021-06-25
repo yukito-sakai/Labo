@@ -29,14 +29,13 @@ plt.show()
 
 
 # Conv
-def Conv(x):
+def Conv(x,w,pad,stride):
     #x = np.random.randint(-3, 3, (4,4))
-    w = np.random.randint(-1, 1, (3,3))
+    #w = np.random.randint(-1, 1, (3,3))
+    #pad = 1
+    #stride = 1
+    '''
     out = []
-
-    pad = 1
-    stride = 1
-
     for k in range(0, len(x)+2*pad -len(w)+1, stride):
         out_row = []
         for i in range(0, len(x)+2*pad -len(w)+1, stride):
@@ -50,26 +49,33 @@ def Conv(x):
         out.append(out_row)  
         
     out = np.array(out)
-    #print('conv')
-    print(out)
-    return(out)
+    '''
+    lenz = (len(x)+2*pad -len(w))//stride+1
+    z = np.zeros((lenz,lenz))
+    for i in range(len(w)):
+        for j in range(len(w)):
+            z[max(0,pad-i):min(len(z),len(z)+pad-i),max(0,pad-j):min(len(z),len(z)+pad-j)] += x[max(0,-pad+i):min(len(x),-1+pad+len(x)), max(0, -pad+j):min(len(x),-1+j+len(x))] * w[i,j]
+    
+    print(z)
+    return(z)
 
 #ReLu
 def ReLu(x):
-    return np.where(x > 0, x, 0)
+    return np.maximum(0,x)
 
 # MaxPooling
 def MaxPooling(out):
     out_2 = []
-    out_2 = np.maximum(np.maximum(out[0::2,0::2], out[0::2,1::2]),np.maximum(out[1::2,0::2], out[1::2,1::2]))  # 0::2 0番目の値から２の倍数をとってくる
+    #out_2 = np.maximum(conda activate tf),np.maximum(out[1::2,0::2], out[1::2,1::2]))  # 0::2 0番目の値から２の倍数をとってくる
+    out_2 = np.maximum.reduce([out[0::2,0::2], out[0::2,1::2],out[1::2,0::2], out[1::2,1::2]])
     print(out_2)
     return out_2
 
 #Fully Connected
-def FC(out_2):
+def FC(out_2,weight,bias):
     out_2 = np.ravel(out_2)       #１次元配列にする
-    weight = np.random.rand(2,len(out_2))
-    bias = np.random.rand(2)
+    #weight = np.random.rand(2,len(out_2))
+    #bias = np.random.rand(2)
 
     fc = weight.dot(out_2) + bias
     fc = np.array(fc)
@@ -83,11 +89,17 @@ def softmax(x):
 
 
 np.random.seed(0)
+x = np.random.randint(-3, 3, (4,4))
+w = np.random.randint(-1, 1, (3,3))
+pad = 1
+stride = 1
+#weight = np.random.rand(2,len(out_2))
+weight = np.random.rand(2,4)
+bias = np.random.rand(2)
 
-u = np.random.randint(-3, 3, (4,4))
-v = Conv(u)
-w = ReLu(v)
-x = MaxPooling(w)
-y = FC(x)
-z = softmax(y)
-print(z)
+conv = Conv(x,w,pad,stride,bias)
+relu = ReLu(conv)
+mp = MaxPooling(relu)
+fc = FC(mp,weight,bias)
+sm = softmax(fc)
+print(sm)

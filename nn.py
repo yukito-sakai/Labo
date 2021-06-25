@@ -33,7 +33,7 @@ x = np.array([1, 2, 3, 4, 5])
 w = np.array([1, 1, 1])
 out = []
 
-pad = 0
+pad = 1
 stride = 1
 
 for i in range(0, len(x)+2*pad -len(w)+1, stride):
@@ -43,6 +43,17 @@ for i in range(0, len(x)+2*pad -len(w)+1, stride):
             z += x[i+j-pad] * w[j]
     out.append(z)
 print(out)
+#for文をフィルター内のみにしたもの
+z = []
+for i in range(len(w)):
+    
+    z[:] += x[i:i+len(w)] * w[:]
+
+print(out)
+
+#for i in range(len(w)):
+  #  z += x[:] * w[i]
+   # print(z)
 
 # MaxPooling
 x = np.array(list(range(10)))  # x=[0,1,2,3,4,5,6,7,8,9]
